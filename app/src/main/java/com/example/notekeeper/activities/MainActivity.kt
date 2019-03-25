@@ -1,11 +1,13 @@
-package com.example.notekeeper
+package com.example.notekeeper.activities
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
+import com.example.notekeeper.R
+import com.example.notekeeper.constants.EXTRA_NOTE_POSITION
+import com.example.notekeeper.constants.POSITION_NOT_SET
 import com.example.notekeeper.dataManagers.DataManager
 import com.example.notekeeper.models.CourseInfo
 
@@ -14,18 +16,33 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private var notePosition = POSITION_NOT_SET
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val dm = DataManager()
         val adapterCourses = ArrayAdapter<CourseInfo>(this, android.R.layout.simple_spinner_item,
-            dm.courses.values.toList())
+            DataManager.courses.values.toList())
         adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCourse.adapter = adapterCourses
 
+        notePosition = intent.getIntExtra(EXTRA_NOTE_POSITION, POSITION_NOT_SET)
 
+        if (notePosition != POSITION_NOT_SET)
+            displayNote()
+
+
+    }
+
+    private fun displayNote() {
+        val note = DataManager.notes[notePosition]
+        textNoteInfo.setText(note.text)
+        textNoteTitl.setText(note.title)
+
+        val coursePosition = DataManager.courses.values.indexOf(note.course)
+        spinnerCourse.setSelection(coursePosition)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

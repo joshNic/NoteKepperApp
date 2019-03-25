@@ -3,12 +3,13 @@ package com.example.notekeeper.dataManagers
 import com.example.notekeeper.models.CourseInfo
 import com.example.notekeeper.models.NoteInfo
 
-class DataManager {
+object DataManager {
     val courses = HashMap<String, CourseInfo>()
     val notes = ArrayList<NoteInfo>()
 
     init {
         initializeCourses()
+        initializeNotes()
     }
 
     private fun initializeCourses(){
@@ -23,5 +24,9 @@ class DataManager {
 
         course = CourseInfo("java_core", "Java Fundamentals: The Core Platform")
         courses.set(course.courseId, course)
+    }
+    private fun initializeNotes(){
+        var note = NoteInfo(CourseInfo("android_intents", "Java Fundamentals: The Java Language"), "test title", "Another Description")
+        notes.add(note)
     }
 }
