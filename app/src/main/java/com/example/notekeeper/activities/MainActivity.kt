@@ -10,6 +10,7 @@ import com.example.notekeeper.constants.EXTRA_NOTE_POSITION
 import com.example.notekeeper.constants.POSITION_NOT_SET
 import com.example.notekeeper.dataManagers.DataManager
 import com.example.notekeeper.models.CourseInfo
+import com.example.notekeeper.models.NoteInfo
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -30,10 +31,17 @@ class MainActivity : AppCompatActivity() {
         adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerCourse.adapter = adapterCourses
 
-        notePosition = intent.getIntExtra(EXTRA_NOTE_POSITION, POSITION_NOT_SET)
+        notePosition = savedInstanceState?.getInt(EXTRA_NOTE_POSITION, POSITION_NOT_SET) ?: intent.getIntExtra(
+            EXTRA_NOTE_POSITION,
+            POSITION_NOT_SET
+        )
 
         if (notePosition != POSITION_NOT_SET)
             displayNote()
+        else {
+            DataManager.notes.add(NoteInfo())
+            notePosition = DataManager.notes.lastIndex
+        }
 
 
     }
@@ -76,13 +84,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if(notePosition >= DataManager.notes.lastIndex){
+        if (notePosition >= DataManager.notes.lastIndex) {
             val menuItem = menu?.findItem(R.id.action_next)
-            if (menuItem != null){
+            if (menuItem != null) {
                 menuItem.icon = getDrawable(R.drawable.ic_block_black_24dp)
                 menuItem.isEnabled = false
             }
         }
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveNote()
+    }
+
+    private fun saveNote() {
+        val note = DataManager.notes[notePosition]
+        note.title = textNoteTitl.text.toString()
+        note.text = textNoteInfo.text.toString()
+        note.course = spinnerCourse.selectedItem as CourseInfo
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(EXTRA_NOTE_POSITION, notePosition)
     }
 }

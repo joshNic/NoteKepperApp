@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import com.example.notekeeper.R
 import com.example.notekeeper.constants.EXTRA_NOTE_POSITION
 import com.example.notekeeper.dataManagers.DataManager
+import com.example.notekeeper.models.NoteInfo
 import kotlinx.android.synthetic.main.activity_note_list.*
 import kotlinx.android.synthetic.main.content_note_list.*
 
@@ -30,4 +31,8 @@ class NoteListActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (listNotes.adapter as ArrayAdapter<NoteInfo>).notifyDataSetChanged()
+    }
 }
