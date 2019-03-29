@@ -3,6 +3,7 @@ package com.example.notekeeper.activities
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.widget.ArrayAdapter
 import com.example.notekeeper.R
 import com.example.notekeeper.constants.EXTRA_NOTE_POSITION
@@ -19,20 +20,16 @@ class NoteListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            val activityIntent = Intent(this, MainActivity::class.java)
+            val activityIntent = Intent(this, NoteActivity::class.java)
             startActivity(activityIntent)
         }
 
-        listNotes.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, DataManager.notes)
-        listNotes.setOnItemClickListener{parent, view, position, id ->
-            val activityIntent = Intent(this, MainActivity::class.java)
-            activityIntent.putExtra(EXTRA_NOTE_POSITION, position)
-            startActivity(activityIntent)
-        }
+        listItems.layoutManager = LinearLayoutManager(this)
+
+
     }
 
     override fun onResume() {
         super.onResume()
-        (listNotes.adapter as ArrayAdapter<NoteInfo>).notifyDataSetChanged()
     }
 }
