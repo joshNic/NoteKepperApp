@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.ArrayAdapter
 import com.example.notekeeper.R
+import com.example.notekeeper.adapters.NoteRecyclerAdapter
 import com.example.notekeeper.constants.EXTRA_NOTE_POSITION
 import com.example.notekeeper.dataManagers.DataManager
 import com.example.notekeeper.models.NoteInfo
@@ -25,6 +26,8 @@ class NoteListActivity : AppCompatActivity() {
         }
 
         listItems.layoutManager = LinearLayoutManager(this)
+        listItems.adapter = NoteRecyclerAdapter(this, DataManager.notes)
+
 
 
     }
