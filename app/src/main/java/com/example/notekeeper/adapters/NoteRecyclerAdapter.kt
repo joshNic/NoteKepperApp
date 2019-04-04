@@ -16,6 +16,7 @@ class NoteRecyclerAdapter(private val context: Context, private val notes: List<
     RecyclerView.Adapter<NoteRecyclerAdapter.ViewHolder>() {
 
     private val layoutInflater = LayoutInflater.from(context)
+    private var onNoteSelectedListener: OnNoteSelectedListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = layoutInflater.inflate(R.layout.list_note_item, parent, false)
@@ -30,19 +31,26 @@ class NoteRecyclerAdapter(private val context: Context, private val notes: List<
         holder.textTitle?.text = note.title
         holder.notePosition = position
     }
+    fun setOnSelectedListener(listener: OnNoteSelectedListener) {
+        onNoteSelectedListener = listener
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textCourse = itemView?.findViewById<TextView?>(R.id.textCourse)
-        val textTitle = itemView?.findViewById<TextView?>(R.id.textTitle)
+        val textCourse = itemView.findViewById<TextView?>(R.id.textCourse)
+        val textTitle = itemView.findViewById<TextView?>(R.id.textTitle)
         var notePosition = 0
 
         init {
-            itemView?.setOnClickListener{
+            itemView.setOnClickListener{
+                onNoteSelectedListener?.onNoteSelected(notes[notePosition])
                 val intent = Intent(context, NoteActivity::class.java)
                 intent.putExtra(EXTRA_NOTE_POSITION, notePosition)
                 context.startActivity(intent)
             }
         }
 
+    }
+    interface OnNoteSelectedListener {
+        fun onNoteSelected(note: NoteInfo)
     }
 }
